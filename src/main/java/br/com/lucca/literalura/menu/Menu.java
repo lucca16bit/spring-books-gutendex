@@ -45,6 +45,18 @@ public class Menu {
                     break;
                 case 2:
                     listarTodosOsLivros();
+                    break;
+                case 3:
+                    listarTodosOsAutores();
+                    break;
+                case 4:
+                    listarAutoresPorAno();
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
             }
         }
     }
@@ -72,5 +84,25 @@ public class Menu {
 
     private void listarTodosOsLivros() {
         response.results().forEach(System.out::println);
+    }
+
+    private void listarTodosOsAutores() {
+        System.out.println("Autores registrados:");
+        response.results().stream()
+                .flatMap(a -> a.autor().stream())
+                .distinct()
+                .forEach(a -> System.out.printf("""
+                ================================================
+                Autor:                  %s
+                Nascimento:             %d
+                Falecimento:            %d
+                %n
+                """, a.nome(), a.anoNascimento(), a.anoFalecimento()));
+    }
+
+    private void listarAutoresPorAno() {
+        System.out.println("Digite o ano que deseja filtrar:");
+        int anoBusca = sc.nextInt();
+
     }
 }
