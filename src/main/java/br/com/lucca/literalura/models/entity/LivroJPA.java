@@ -1,7 +1,9 @@
-package br.com.lucca.literalura.models;
+package br.com.lucca.literalura.models.entity;
 
+import br.com.lucca.literalura.models.Livro;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -9,15 +11,23 @@ import java.util.List;
 public class LivroJPA {
     @Id
     private Long id;
+
+    @Column(nullable = false)
     private String titulo;
+
     @ManyToOne
-    @JoinColumn(name = "autor_id")
+    @JoinColumn(name = "autor")
     private AutorJPA autor;
+
+    @Column
     private List<String> idioma;
+
+    @Column
     private int numeroDownloads;
 
-    public LivroJPA() {}
-
+    public LivroJPA() {
+        this.idioma = new ArrayList<>();
+    }
     public LivroJPA(Livro livro) {
         this.id = livro.id();
         this.titulo = livro.titulo();
@@ -67,12 +77,13 @@ public class LivroJPA {
 
     @Override
     public String toString() {
-        return "Livro: {" +
-                "id: " + id +
-                ", titulo: '" + titulo + '\'' +
-                ", autor: " + autor +
-                ", idioma: " + idioma +
-                ", número de downloads: " + numeroDownloads +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("=======================   LIVRO   =======================\n")
+                .append("Id: ").append(id).append("\n")
+                .append("Título: '").append(titulo).append("'\n")
+                .append("Autor: ").append(autor != null ? autor.getNome() :  "Desconhecido").append("\n")
+                .append("Idioma: ").append(idioma).append("\n")
+                .append("Número de Downloads: ").append(numeroDownloads).append("\n");
+        return sb.toString();
     }
 }
