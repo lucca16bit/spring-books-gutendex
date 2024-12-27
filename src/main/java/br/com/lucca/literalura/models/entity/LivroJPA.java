@@ -83,7 +83,8 @@ public class LivroJPA {
                 .append("Título: '").append(titulo).append("'\n")
                 .append("Autor: ").append(autor != null ? autor.getNome() :  "Desconhecido").append("\n")
                 .append("Idioma: ").append(idioma).append("\n")
-                .append("Número de Downloads: ").append(numeroDownloads).append("\n");
+                .append("Número de Downloads: ").append(numeroDownloads).append("\n")
+                .append("=========================================================\n");
         return sb.toString();
     }
 }

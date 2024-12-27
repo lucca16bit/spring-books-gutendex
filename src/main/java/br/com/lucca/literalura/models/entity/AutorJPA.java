@@ -80,8 +80,7 @@ public class AutorJPA {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("=======================   AUTOR   =======================\n")
-                .append("Nome: '").append(nome).append("'\n")
+        sb.append("Nome: '").append(nome).append("'\n")
                 .append("Ano de Nascimento: ").append(anoNascimento).append("\n")
                 .append("Ano de Falecimento: ").append(anoFalecimento != null ? anoFalecimento : "Ainda vivo").append("\n");
         return sb.toString();
