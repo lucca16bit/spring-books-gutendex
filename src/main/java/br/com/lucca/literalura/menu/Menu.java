@@ -2,15 +2,39 @@ package br.com.lucca.literalura.menu;
 
 import br.com.lucca.literalura.models.GutendexResponse;
 import br.com.lucca.literalura.models.Livro;
+import br.com.lucca.literalura.models.entity.LivroJPA;
+import br.com.lucca.literalura.repository.LivroRepository;
+import br.com.lucca.literalura.repository.AutorRepository;
 import br.com.lucca.literalura.services.GutendexService;
+import br.com.lucca.literalura.services.LivroService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+@Component
 public class Menu {
     Scanner sc = new Scanner(System.in);
+    public List<LivroJPA> livros = new ArrayList<>();
     GutendexService service = new GutendexService();
     GutendexResponse response;
+
+    @Autowired
+    private LivroRepository livroRepository;
+
+    @Autowired
+    private AutorRepository autorRepository;
+
+    @Autowired
+    private LivroService livroService;
+
+    public Menu(LivroRepository livroRepository, LivroService livroService) {
+        this.livroRepository = livroRepository;
+        this.livroService = livroService;
+    }
 
     {
         try {
@@ -62,6 +86,13 @@ public class Menu {
     }
 
     private void buscarPorTitulo() {
+        Livro dadosLivro = getLivros();
+        LivroJPA livro = new LivroJPA(dadosLivro);
+        livroRepository.save(livro);
+        System.out.println(dadosLivro);
+    }
+
+    private Livro getLivros() {
         System.out.println("Digite o título do livro que deseja buscar:");
         String tituloBusca = sc.nextLine();
         Livro livro = response.results().stream()
@@ -70,39 +101,21 @@ public class Menu {
                 .orElse(null);
 
         if (livro != null) {
-            System.out.printf("""
-            ==========================   LIVRO   ==========================
-            Título:                 %s
-            Autor:                  %s
-            Idioma:                 %s
-            Número de Downloads:    %d
-            """, livro.titulo(),livro.autor(),livro.idioma(), livro.numeroDownloads());
+            System.out.println("Livro: " + tituloBusca + " encontrado!");
         } else {
             System.out.println("Livro: '" + tituloBusca +"' não encontrado.");
         }
+        return livro;
     }
 
     private void listarTodosOsLivros() {
-        response.results().forEach(System.out::println);
+        livroService.listarTodosOsLivros();
     }
 
     private void listarTodosOsAutores() {
-        System.out.println("Autores registrados:");
-        response.results().stream()
-                .flatMap(a -> a.autor().stream())
-                .distinct()
-                .forEach(a -> System.out.printf("""
-                ================================================
-                Autor:                  %s
-                Nascimento:             %d
-                Falecimento:            %d
-                %n
-                """, a.nome(), a.anoNascimento(), a.anoFalecimento()));
     }
 
     private void listarAutoresPorAno() {
-        System.out.println("Digite o ano que deseja filtrar:");
-        int anoBusca = sc.nextInt();
 
     }
 }
