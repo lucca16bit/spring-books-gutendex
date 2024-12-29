@@ -36,14 +36,6 @@ public class Menu {
         this.livroService = livroService;
     }
 
-    {
-        try {
-            response = service.obterLivros();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void menuCli() {
         int opcao = -1;
 
@@ -86,24 +78,20 @@ public class Menu {
     }
 
     private void buscarPorTitulo() {
-        Livro dadosLivro = getLivros();
-        LivroJPA livro = new LivroJPA(dadosLivro);
+        LivroJPA livro = getLivros();
         livroRepository.save(livro);
-        System.out.println(dadosLivro);
+        System.out.println(livro);
     }
 
-    private Livro getLivros() {
+    private LivroJPA getLivros() {
         System.out.println("Digite o título do livro que deseja buscar:");
         String tituloBusca = sc.nextLine();
-        Livro livro = response.results().stream()
-                .filter(l -> l.titulo().toLowerCase().contains(tituloBusca))
-                .findFirst()
-                .orElse(null);
 
-        if (livro != null) {
-            System.out.println("Livro: " + tituloBusca + " encontrado!");
-        } else {
-            System.out.println("Livro: '" + tituloBusca +"' não encontrado.");
+        LivroJPA livro = null;
+        try {
+            livro = livroService.salvarLivro(tituloBusca);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return livro;
     }
