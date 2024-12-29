@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "livros")
@@ -15,9 +16,13 @@ public class LivroJPA {
     @Column(nullable = false)
     private String titulo;
 
-    @ManyToOne
-    @JoinColumn(name = "autor")
-    private AutorJPA autor;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "livro_autor",
+            joinColumns = @JoinColumn(name = "livro_id"),
+            inverseJoinColumns = @JoinColumn(name = "autor_id")
+    )
+    private List<AutorJPA> autores = new ArrayList<>();;
 
     @Column
     private List<String> idioma;
@@ -28,9 +33,11 @@ public class LivroJPA {
     public LivroJPA() {
         this.idioma = new ArrayList<>();
     }
+
     public LivroJPA(Livro livro) {
         this.id = livro.id();
         this.titulo = livro.titulo();
+        this.autores = new ArrayList<>();
         this.idioma = livro.idioma();
         this.numeroDownloads = livro.numeroDownloads();
     }
@@ -51,12 +58,12 @@ public class LivroJPA {
         this.titulo = titulo;
     }
 
-    public AutorJPA getAutor() {
-        return autor;
+    public List<AutorJPA> getAutores() {
+        return autores;
     }
 
-    public void setAutor(AutorJPA autor) {
-        this.autor = autor;
+    public void setAutores(List<AutorJPA> autores) {
+        this.autores = autores;
     }
 
     public List<String> getIdioma() {
@@ -75,13 +82,26 @@ public class LivroJPA {
         this.numeroDownloads = numeroDownloads;
     }
 
+    public void adicionarAutor(AutorJPA autor) {
+        this.autores.add(autor);
+        autor.getLivros().add(this);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("=======================   LIVRO   =======================\n")
                 .append("Id: ").append(id).append("\n")
                 .append("Título: '").append(titulo).append("'\n")
-                .append("Autor: ").append(autor != null ? autor.getNome() :  "Desconhecido").append("\n")
+                .append("Autor: ");
+        if (autores != null && !autores.isEmpty()) {
+            sb.append(autores.stream()
+                    .map(AutorJPA::getNome)
+                    .collect(Collectors.joining(", ")));
+        } else {
+            sb.append("Desconhecido");
+        }
+        sb.append("\n")
                 .append("Idioma: ").append(idioma).append("\n")
                 .append("Número de Downloads: ").append(numeroDownloads).append("\n")
                 .append("=========================================================\n");

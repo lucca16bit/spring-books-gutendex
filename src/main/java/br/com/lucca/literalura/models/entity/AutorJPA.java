@@ -22,7 +22,7 @@ public class AutorJPA {
     @Column
     private Integer anoFalecimento;
 
-    @OneToMany(mappedBy = "autor")
+    @ManyToMany(mappedBy = "autores")
     private List<LivroJPA> livros = new ArrayList<>();
 
     public AutorJPA() {}
@@ -70,11 +70,6 @@ public class AutorJPA {
 
     public List<LivroJPA> getLivros() {
         return livros;
-    }
-
-    public void adicionarLivro(LivroJPA livro) {
-        this.livros.add(livro);
-        livro.setAutor(this);
     }
 
     @Override
