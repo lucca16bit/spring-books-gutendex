@@ -5,6 +5,7 @@ import br.com.lucca.literalura.models.Livro;
 import br.com.lucca.literalura.models.entity.LivroJPA;
 import br.com.lucca.literalura.repository.LivroRepository;
 import br.com.lucca.literalura.repository.AutorRepository;
+import br.com.lucca.literalura.services.AutorService;
 import br.com.lucca.literalura.services.GutendexService;
 import br.com.lucca.literalura.services.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class Menu {
 
     @Autowired
     private LivroService livroService;
+
+    @Autowired
+    private AutorService autorService;
 
     public Menu(LivroRepository livroRepository, LivroService livroService) {
         this.livroRepository = livroRepository;
@@ -101,6 +105,7 @@ public class Menu {
     }
 
     private void listarTodosOsAutores() {
+        autorService.listarTodosOsAutores();
     }
 
     private void listarAutoresPorAno() {
