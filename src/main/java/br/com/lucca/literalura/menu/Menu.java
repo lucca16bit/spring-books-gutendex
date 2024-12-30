@@ -109,6 +109,8 @@ public class Menu {
     }
 
     private void listarAutoresPorAno() {
-
+        System.out.println("Insira o ano para a busca:");
+        int ano = sc.nextInt();
+        autorService.listarAutoresVivos(ano);
     }
 }
