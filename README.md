@@ -51,4 +51,6 @@ O projeto oferece as seguintes funcionalidades:
     Após a execução, o sistema estará disponível via linha de comando. Siga as instruções exibidas no menu para realizar as operações desejadas.
 
 
-
+<div style="text-align: center;">
+  <img src="src/main/resources/assets/badge-literalura.png" alt="badge literalura" width="300">
+</div>
