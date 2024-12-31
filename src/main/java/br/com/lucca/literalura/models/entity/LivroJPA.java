@@ -1,10 +1,13 @@
 package br.com.lucca.literalura.models.entity;
 
+import br.com.lucca.literalura.models.Idioma;
 import br.com.lucca.literalura.models.Livro;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
@@ -24,8 +27,9 @@ public class LivroJPA {
     )
     private List<AutorJPA> autores = new ArrayList<>();;
 
-    @Column
-    private List<String> idioma;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<Idioma> idioma;
 
     @Column
     private int numeroDownloads;
@@ -38,7 +42,13 @@ public class LivroJPA {
         this.id = livro.id();
         this.titulo = livro.titulo();
         this.autores = new ArrayList<>();
-        this.idioma = livro.idioma();
+        this.idioma = livro.idioma().stream()
+                .map(codigo -> Arrays.stream(Idioma.values())
+                        .filter(i -> i.getCodigo().equals(codigo))
+                        .findFirst()
+                        .orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         this.numeroDownloads = livro.numeroDownloads();
     }
 
@@ -66,11 +76,11 @@ public class LivroJPA {
         this.autores = autores;
     }
 
-    public List<String> getIdioma() {
+    public List<Idioma> getIdioma() {
         return idioma;
     }
 
-    public void setIdioma(List<String> idioma) {
+    public void setIdioma(List<Idioma> idioma) {
         this.idioma = idioma;
     }
 
