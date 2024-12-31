@@ -2,6 +2,7 @@ package br.com.lucca.literalura.services;
 
 import br.com.lucca.literalura.models.Autor;
 import br.com.lucca.literalura.models.GutendexResponse;
+import br.com.lucca.literalura.models.Idioma;
 import br.com.lucca.literalura.models.entity.AutorJPA;
 import br.com.lucca.literalura.models.entity.LivroJPA;
 import br.com.lucca.literalura.repository.LivroRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,5 +68,24 @@ public class LivroService {
     public void listarTodosOsLivros() {
         List<LivroJPA> livros = livroRepository.findAllWithAutores();
         livros.forEach(System.out::println);
+    }
+
+    public void listarLivrosPorIdioma(String codigoIdioma) {
+        try {
+            Idioma idioma = Arrays.stream(Idioma.values())
+                    .filter(i -> i.name().equalsIgnoreCase(codigoIdioma))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Idioma não encontrado"));
+
+            List<LivroJPA> livros = livroRepository.findByIdiomaContaining(idioma);
+            if (livros.isEmpty()) {
+                System.out.println("Nenhum livro encontrado para o idioma: " + idioma);
+            } else {
+                System.out.println("Livro(s) encontrados!\n");
+                livros.forEach(System.out::println);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

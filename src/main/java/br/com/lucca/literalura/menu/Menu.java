@@ -1,7 +1,6 @@
 package br.com.lucca.literalura.menu;
 
 import br.com.lucca.literalura.models.GutendexResponse;
-import br.com.lucca.literalura.models.Livro;
 import br.com.lucca.literalura.models.entity.LivroJPA;
 import br.com.lucca.literalura.repository.LivroRepository;
 import br.com.lucca.literalura.repository.AutorRepository;
@@ -72,6 +71,9 @@ public class Menu {
                 case 4:
                     listarAutoresPorAno();
                     break;
+                case 5:
+                    listarPorIdioma();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -85,6 +87,7 @@ public class Menu {
         LivroJPA livro = getLivros();
         livroRepository.save(livro);
         System.out.println(livro);
+        System.out.println("Livro salvo no banco de dados!");
     }
 
     private LivroJPA getLivros() {
@@ -112,5 +115,13 @@ public class Menu {
         System.out.println("Insira o ano para a busca:");
         int ano = sc.nextInt();
         autorService.listarAutoresVivos(ano);
+    }
+
+
+    private void listarPorIdioma() {
+        System.out.println("Insira o idioma que deseja buscar:");
+        String idiomaBusca = sc.nextLine();
+
+        livroService.listarLivrosPorIdioma(idiomaBusca);
     }
 }

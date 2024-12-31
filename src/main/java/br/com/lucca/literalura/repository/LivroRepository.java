@@ -1,5 +1,6 @@
 package br.com.lucca.literalura.repository;
 
+import br.com.lucca.literalura.models.Idioma;
 import br.com.lucca.literalura.models.entity.LivroJPA;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,5 @@ public interface LivroRepository extends JpaRepository<LivroJPA, Long> {
     @Query("SELECT DISTINCT l FROM LivroJPA l LEFT JOIN FETCH l.autores")
     List<LivroJPA> findAllWithAutores();
 
-//    List<LivroJPA> findByIdioma(String idioma);
-
-
+    List<LivroJPA> findByIdiomaContaining(Idioma idioma);
 }
